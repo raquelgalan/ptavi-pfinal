@@ -1,2 +1,0 @@
-User	IP			Port	Fecha Registro	Expires
-penny	127.0.0.1	9002	1435151570		3600
