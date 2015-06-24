@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DTD de pr-->
+
+<config>
+    <server name="MiServidorGuay" ip="127.0.0.1" puerto="5555"/>    
+    <database path="usuarios_registrados.txt" passwdpath=""/>
+    <log path="pr_log.txt"/>
+</config>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DTD de ua1-->
+
+<config>
+    <account username="leonard" passwd =""/>    
+    <uaserver ip="127.0.0.1" puerto="9001"/>
+    <rtpaudio puerto="34543"/>
+    <regproxy ip="127.0.0.1" puerto="5555"/>
+    <log path="ua1_log.txt"/>
+    <audio path="cancion.mp3"/>
+</config>
+
+
