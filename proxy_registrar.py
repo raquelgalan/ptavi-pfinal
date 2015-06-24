@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-15 -*-
-# Raquel Galán Montes
+# Práctica Final: Raquel Galán Montes
 """
 Clase (y programa principal) para un servidor de SIP proxy-registrar en UDP
 """
@@ -47,6 +47,7 @@ class ProxyHandler(SocketServer.DatagramRequestHandler):
     """
     dic_clientes = {}
     error_invite = False
+    error_bye = False
     def handle(self):
         """
         Manejador que recibe peticiones SIP del cliente
@@ -162,10 +163,11 @@ class ProxyHandler(SocketServer.DatagramRequestHandler):
                             log.FicheroXML(" Received from ", data, receptor_ip, receptor_pto)
                         except:
                             error_invite = True
-                            Sin_servidor = " Error: No server listening "
+                            Sin_servidor = " Error: No server listening " + receptor_ip + " port " + str(receptor_pto)
                             print Sin_servidor
                             log.FicheroXML(Sin_servidor, " ", " ", " ")
-  
+                            
+                        error_invite = False
                         # Reenvío la respuesta al que envió el invite
                         if not error_invite:
                             self.wfile.write(data)
@@ -238,17 +240,28 @@ class ProxyHandler(SocketServer.DatagramRequestHandler):
                                                 socket.SO_REUSEADDR, 1)
                         my_socket.connect((receptor_ip, int(receptor_pto)))
                         
-                        print "Reenviando: ", line
-                        my_socket.send(line)
-                        log.FicheroXML(" Sent to ", line, receptor_ip, receptor_pto)
-                        
-                        data = my_socket.recv(1024)
-                        print "Recibido", data
-                        log. FicheroXML(" Received from ", data, receptor_ip, receptor_pto)
-                        
-                        self.wfile.write(data)
-                        print "enviando respuesta " + data
-                        log.FicheroXML(" Sent to ", data, ip, pto)
+                        try:
+                            print "Reenviando: ", line
+                            my_socket.send(line)
+                            log.FicheroXML(" Sent to ", line, receptor_ip, receptor_pto)
+                            data = my_socket.recv(1024)
+                            print "Recibido", data
+                            log. FicheroXML(" Received from ", data, receptor_ip, receptor_pto)
+                            
+                        except:
+                            error_bye = True
+                            Sin_servidor = " Error: No server listening " + receptor_ip + " port " + str(receptor_pto)
+                            print Sin_servidor
+                            log.FicheroXML(Sin_servidor, " ", " ", " ")
+ 
+                        error_invite = False
+                        # Reenvío la respuesta al que envió el bye
+                        if not error_invite:
+                            self.wfile.write(data)
+                            print "enviando respuesta " + data
+                            log.FicheroXML(" Sent to ", data, ip, pto)
+                        else:
+                            self.wfile.write(Not_Found)
 
                     else:
                         print "usuario no encontrado"
